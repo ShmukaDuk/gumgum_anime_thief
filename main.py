@@ -35,6 +35,7 @@ def findPirateScreen():
         pyautogui.click()
         time.sleep(0.01)
         pyautogui.click()
+        pyautogui.hotkey('left')
         
         button_path = ""
         button_counter = 1
