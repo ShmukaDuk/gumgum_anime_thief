@@ -23,7 +23,7 @@ STARTING_EPISODE = 780
 def findPirateScreen():
     play_button = "\x00"
     for i in range(10):
-        play_button = findButton("a_button.png")
+        play_button = findButton("deps/a_button.png")
         if play_button is not None:
             break
             time.sleep(1)
@@ -38,10 +38,10 @@ def findPirateScreen():
         
         button_path = ""
         button_counter = 1
-        download_button = findButton(f"download_button_{button_counter}.png")
+        download_button = findButton(f"deps/download_button_{button_counter}.png")
         while download_button is None:
             button_counter += 1
-            button_filename = f"download_button_{button_counter}.png"
+            button_filename = f"deps/download_button_{button_counter}.png"
             button_filepath = os.path.join(button_path, button_filename)
             
             if os.path.isfile(button_filepath):
@@ -62,7 +62,7 @@ def findPirateScreen():
         return -1
 
 def extractHTML(resolution):
-    background = findButton("download_page_background.png")
+    background = findButton("deps/download_page_background.png")
     x, y = background
     pyautogui.hotkey('ctrl', "shift", 'c')
     pyautogui.moveTo( x + random.randint(1, 10) , y, 1)
