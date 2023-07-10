@@ -15,6 +15,7 @@ import random
 import signal
 import sys
 
+SHOW_NAME = "One Piece"
 GOGOLINK = "https://ww4.gogoanime2.org/watch/one-piece-dub/"
 LATEST_EPISODE = 988
 STARTING_EPISODE = 780
@@ -102,11 +103,10 @@ def getLink(episode_number):
 def saveStringToList(episode_number, resolution, html_string):
     soup = BeautifulSoup(html_string, 'html.parser')
     link = soup.a['href']
-    episode_number = "ep_number"    
 
     # Format the entry as "ep_number, resolution, link"
     
-    entry = f"{episode_number}, {resolution}, {link}"
+    entry = f"{SHOW_NAME}, {episode_number}, {resolution}, {link}"
 
     # Append the entry to the text file
     with open('download_list.txt', 'a') as file:
