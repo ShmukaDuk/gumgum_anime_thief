@@ -7,7 +7,7 @@ import time
 from PIL import Image, ImageChops
 import os
 
-from bs4 import BeautifulSoup
+
 from urllib.parse import urljoin
 from urllib.request import urlretrieve
 from bs4 import BeautifulSoup
@@ -18,7 +18,7 @@ import sys
 SHOW_NAME = "One Piece"
 GOGOLINK = "https://ww4.gogoanime2.org/watch/one-piece-dub/"
 LATEST_EPISODE = 988
-STARTING_EPISODE = 780
+STARTING_EPISODE = 798
 
 def findPirateScreen():
     play_button = "\x00"
@@ -99,6 +99,7 @@ def getLink(episode_number):
     print(link, resolution_txt)
     saveStringToList(episode_number, resolution_txt, link)
     pyautogui.hotkey('ctrl', 'w')
+    time.sleep(1)
     return 0
     
 def saveStringToList(episode_number, resolution, html_string):
@@ -108,7 +109,7 @@ def saveStringToList(episode_number, resolution, html_string):
     # Format the entry as "ep_number, resolution, link"
     
     entry = f"{SHOW_NAME}, {episode_number}, {resolution}, {link}"
-
+    pyperclip.copy(link)
     # Append the entry to the text file
     with open('download_list.txt', 'a') as file:
         file.write(entry + '\n')
@@ -124,8 +125,30 @@ def on_key_press(key):
     except AttributeError:
         pass
 
-def goToEpisode(episode_number):
-    window = gw.getActiveWindow()
+def idmDownload():
+    result = pyautogui.locateOnScreen("deps/idm_download_button.png")
+    if result is not None:
+        x, y = pyautogui.center(result)
+        print("Button found at:", x, y)
+        pyautogui.moveTo(x, y, 1)
+        pyautogui.click()
+        time.sleep(1)
+        pyautogui.hotkey('ctrl', 'v')
+        time.sleep(1)
+        pyautogui.hotkey('enter')
+        time.sleep(1)
+        pyautogui.hotkey('enter')
+        time.sleep(1)
+        pyautogui.hotkey('right')
+        time.sleep(1)
+        pyautogui.hotkey('enter')
+        time.sleep(1)
+        
+    else:
+        print("Button not found.")
+    return 
+
+def goToEpisode(episode_number, window):
     if window is not None:
         left, top, width, height = window.left, window.top, window.width, window.height   
         pyautogui.moveTo(left + 300, top + 60, 1)
@@ -138,17 +161,16 @@ def goToEpisode(episode_number):
 
 def pirate():
     for episode in range(LATEST_EPISODE, LATEST_EPISODE + 1):
-        episode_number = 951
         #load webpage
-        goToEpisode(episode_number)    
+        goToEpisode(episode)    
         #open download page
         if (findPirateScreen() < 0):
             print ("no pirates here")
             continue
         #scrape download link
-        if(getLink(episode_number) < 0):
-            break
-    
+        if(getLink(episode) < 0):
+            continue
+        idmDownload()
 
 def signal_handler(signal, frame):
     print("Closing the program...")
@@ -171,7 +193,7 @@ def findButton(button_picture):
     
     
 
-def main():   
+def main():  
     print("GUMGUM ART THIEF!")
     signal.signal(signal.SIGINT, signal_handler)
 
